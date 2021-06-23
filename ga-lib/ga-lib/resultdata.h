@@ -11,7 +11,8 @@
 class RESULTDATA_API ResultData
 {
 public:
-	ResultData(Solution& solution);
+	ResultData();
+	virtual void constructData(Solution* solution) = 0;
 	virtual void print() = 0;
 	virtual void save() = 0;
 };

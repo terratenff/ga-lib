@@ -6,19 +6,19 @@ Solution::Solution(): fitness_(0), penalty_(0)
 {
 }
 
-bool Solution::operator<(const Solution& other) const
+bool Solution::operator<(Solution* other)
 {
-	return this->fitness_ - this->penalty_ < other.fitness_ - other.penalty_;
+	return this->fitness_ - this->penalty_ < other->fitness_ - other->penalty_;
 }
 
-bool Solution::operator>(const Solution& other) const
+bool Solution::operator>(Solution* other)
 {
-	return this->fitness_ - this->penalty_ > other.fitness_ - other.penalty_;
+	return this->fitness_ - this->penalty_ > other->fitness_ - other->penalty_;
 }
 
-bool Solution::operator==(const Solution& other) const
+bool Solution::operator==(Solution* other)
 {
-	return this->fitness_ - this->penalty_ == other.fitness_ - other.penalty_;
+	return this->fitness_ - this->penalty_ == other->fitness_ - other->penalty_;
 }
 
 void Solution::setFitness(float var)

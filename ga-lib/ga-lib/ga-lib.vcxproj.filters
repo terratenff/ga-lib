@@ -42,6 +42,24 @@
     <ClInclude Include="garunner.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="populationinitializer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="postgenerationoperator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="selector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="crossoveroperator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mutationoperator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="evaluator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -69,6 +87,24 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="garunner.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="populationinitializer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="postgenerationoperator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="selector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="crossoveroperator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mutationoperator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="evaluator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

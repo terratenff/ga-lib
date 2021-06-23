@@ -12,9 +12,9 @@ class GA_SOLUTION_API Solution
 {
 public:
 	Solution();
-	bool operator<(const Solution& other) const;
-	bool operator>(const Solution& other) const;
-	bool operator==(const Solution& other) const;
+	bool operator<(Solution* other);
+	bool operator>(Solution* other);
+	bool operator==(Solution* other);
 	void setFitness(float var);
 	void setPenalty(float var);
 	float getFitness();

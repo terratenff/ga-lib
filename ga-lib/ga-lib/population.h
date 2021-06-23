@@ -11,13 +11,15 @@ class GA_POPULATION_API Population
 {
 public:
 	Population(unsigned int size);
-	bool addSolution(const Solution& solution);
-	Solution& getSolution(const unsigned int i);
+	~Population();
+	void addSolution(Solution* solution);
+	Solution* getSolution(unsigned int i);
 	void assessment();
 	void sort(bool reverse);
+	void clear();
 	virtual void print();
 private:
-	std::vector<Solution> population_;
+	std::vector<Solution*> population_;
 	float bestFitness_;
 	float worstFitness_;
 	float averageFitness_;

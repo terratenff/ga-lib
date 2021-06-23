@@ -5,7 +5,12 @@
 #include "terminationcriteria.h"
 #include "garunner.h"
 #include "problemdata.h"
+#include "selector.h"
+#include "crossoveroperator.h"
+#include "mutationoperator.h"
+#include "evaluator.h"
 #include <vector>
+#include <memory>
 #include <unordered_map>
 
 #ifdef GALIB_EXPORTS
@@ -18,27 +23,39 @@ class GA_API GA
 {
 public:
 	GA();
+	~GA();
 	void setPopulationSize(unsigned int var);
 	void setThreadCount(unsigned int var);
-	void setTerminationCriteria(const TerminationCriteria& criteria);
-	virtual void print();
-	virtual void run(ProblemData& data);
-	Solution& getBestSolution();
-	std::vector<Solution>& getBestSolutionHistory();
+	void setProblemData(ProblemData* problemData);
+	void setTerminationCriteria(TerminationCriteria* criteria);
+	void setSelectors(std::vector<Selector*> selectors);
+	void setCrossoverOperators(std::vector<CrossoverOperator*> crossoverOperators);
+	void setMutationOperators(std::vector<MutationOperator*> mutationOperators);
+	void setEvaluator(Evaluator* evaluator);
+	void print();
+	void run();
+	Solution* getBestSolution();
+	std::vector<Solution*> getBestSolutionHistory();
 private:
 	void createGARunners();
 
-	unsigned int populationSize_;
-	unsigned int threadCount_;
-	std::vector<GARunner> runners_;
-	Population population_;
-	TerminationCriteria criteria_;
+	unsigned int populationSize_ = 0;
+	unsigned int threadCount_ = 1;
+	ProblemData* problemData_ = nullptr;
+	std::vector<GARunner> runners_ = {};
+	Population* population_ = nullptr;
+	TerminationCriteria* criteria_ = nullptr;
 
-	unsigned int generation_;
-	unsigned int time_;
-	std::vector<Solution> bestSolutionHistory_;
-	unsigned int bestSolutionTracker_;
-	std::unordered_map<unsigned int, bool> runnerTracker_;
+	std::vector<Selector*> selectors_ = {};
+	std::vector<CrossoverOperator*> crossoverOperators_ = {};
+	std::vector<MutationOperator*> mutationOperators_ = {};
+	Evaluator* evaluator_ = nullptr;
+
+	unsigned int generation_ = 0;
+	unsigned int time_ = 0;
+	std::vector<Solution*> bestSolutionHistory_ = {};
+	unsigned int bestSolutionTracker_ = 0;
+	std::unordered_map<unsigned int, bool> runnerTracker_ = {};
 
 };
 
