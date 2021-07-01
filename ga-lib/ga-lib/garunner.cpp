@@ -1,8 +1,9 @@
 #include "pch.h"
 #include "garunner.h"
 
-GARunner::GARunner(int id):
-	id_(id)
+GARunner::GARunner(int id, unsigned int subPopulationSize):
+	id_(id),
+	subPopulationSize_(subPopulationSize)
 {
 }
 
@@ -21,17 +22,17 @@ void GARunner::setReferencePopulation(Population* referencePopulation)
 	referencePopulation_ = referencePopulation;
 }
 
-void GARunner::setSelectors(std::vector<Selector*> selectors)
+void GARunner::setSelectors(std::vector<Selector*>* selectors)
 {
 	selectors_ = selectors;
 }
 
-void GARunner::setCrossoverOperators(std::vector<CrossoverOperator*> crossoverOperators)
+void GARunner::setCrossoverOperators(std::vector<CrossoverOperator*>* crossoverOperators)
 {
 	crossoverOperators_ = crossoverOperators;
 }
 
-void GARunner::setMutationOperators(std::vector<MutationOperator*> mutationOperators)
+void GARunner::setMutationOperators(std::vector<MutationOperator*>* mutationOperators)
 {
 	mutationOperators_ = mutationOperators;
 }
@@ -41,23 +42,9 @@ void GARunner::setEvaluator(Evaluator* evaluator)
 	evaluator_ = evaluator;
 }
 
-void GARunner::run()
+void GARunner::createSubPopulation()
 {
-	if (!isStarted_)
-	{
-		isStarted_ = true;
-		runnerThread_ = std::thread(&GARunner::threadFunction, this);
-	}
-}
-
-void GARunner::terminate()
-{
-	terminated_ = true;
-}
-
-void GARunner::join()
-{
-	runnerThread_.join();
+	// TODO
 }
 
 Population* GARunner::getSubPopulation()
@@ -65,15 +52,18 @@ Population* GARunner::getSubPopulation()
 	return subPopulation_;
 }
 
-void GARunner::threadFunction()
-{
-	while (!terminated_)
-	{
-		// TODO
-	}
-}
-
-void GARunner::createSubPopulation()
+void GARunner::run()
 {
 	// TODO
 }
+
+void GARunner::terminate()
+{
+	// TODO
+}
+
+void GARunner::threadFunction()
+{
+	// TODO
+}
+

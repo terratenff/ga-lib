@@ -7,3 +7,8 @@ PostGenerationOperator::PostGenerationOperator(ProblemData* data, Evaluator* eva
 	generationFrequency_(generationFrequency)
 {
 }
+
+unsigned int PostGenerationOperator::getGenerationFrequency()
+{
+	return generationFrequency_;
+}

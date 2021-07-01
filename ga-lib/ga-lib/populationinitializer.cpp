@@ -7,3 +7,8 @@ PopulationInitializer::PopulationInitializer(ProblemData* data, Evaluator* evalu
 	useWeight_(useWeight)
 {
 }
+
+unsigned int PopulationInitializer::getUseWeight()
+{
+	return useWeight_;
+}

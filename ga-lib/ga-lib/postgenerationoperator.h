@@ -14,10 +14,12 @@ class POSTGENERATION_API PostGenerationOperator
 {
 public:
 	PostGenerationOperator(ProblemData* data, Evaluator* evaluator, unsigned int generationFrequency);
-	virtual void run(Population* population) = 0;
-private:
+	unsigned int getGenerationFrequency();
+	virtual void run(Population* populationNew, Population* populationOld = nullptr) = 0;
+protected:
 	ProblemData* data_;
 	Evaluator* evaluator_;
+private:
 	unsigned int generationFrequency_;
 };
 

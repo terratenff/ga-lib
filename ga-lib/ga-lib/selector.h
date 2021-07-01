@@ -12,8 +12,11 @@
 class SELECTOR_API Selector
 {
 public:
-	Selector(unsigned int useWeight);
+	Selector(unsigned int candidateCount, unsigned int useWeight);
+	unsigned int getUseWeight();
 	virtual Solution* select(Population* population) = 0;
+protected:
+	unsigned int candidateCount_;
 private:
 	unsigned int useWeight_;
 };

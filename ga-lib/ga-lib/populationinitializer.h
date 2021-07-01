@@ -15,11 +15,13 @@ class INITIALIZER_API PopulationInitializer
 {
 public:
 	PopulationInitializer(ProblemData* data, Evaluator* evaluator, unsigned int useWeight);
-	virtual Population* createPopulation() = 0;
+	unsigned int getUseWeight();
+	virtual Population* createPopulation(unsigned int populationSize) = 0;
 	virtual Solution* createSolution() = 0;
-private:
+protected:
 	ProblemData* data_;
 	Evaluator* evaluator_;
+private:
 	unsigned int useWeight_;
 };
 

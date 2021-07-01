@@ -14,10 +14,12 @@ class MUTATION_API MutationOperator
 {
 public:
 	MutationOperator(ProblemData* data, Evaluator* evaluator, unsigned int useWeight);
+	unsigned int getUseWeight();
 	virtual void run(Solution* offspring) = 0;
-private:
+protected:
 	ProblemData* data_;
 	Evaluator* evaluator_;
+private:
 	unsigned int useWeight_;
 private:
 

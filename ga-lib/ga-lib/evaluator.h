@@ -9,13 +9,13 @@
 #define EVALUATOR_API __declspec(dllimport)
 #endif
 
-class Evaluator
+class EVALUATOR_API Evaluator
 {
 public:
 	Evaluator(ProblemData* data);
 	virtual float evaluateFitness(Solution* solution) = 0;
 	virtual float evaluatePenalty(Solution* solution);
-private:
+protected:
 	ProblemData* data_;
 };
 

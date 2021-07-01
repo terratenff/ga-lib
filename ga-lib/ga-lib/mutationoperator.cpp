@@ -8,3 +8,8 @@ MutationOperator::MutationOperator(ProblemData* data, Evaluator* evaluator, unsi
 {
 }
 
+unsigned int MutationOperator::getUseWeight()
+{
+	return useWeight_;
+}
+

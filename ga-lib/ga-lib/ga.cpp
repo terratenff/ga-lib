@@ -2,6 +2,8 @@
 #include "ga.h"
 #include <iostream>
 #include <limits>
+#include <ctime>
+
 
 GA::GA()
 {
@@ -12,21 +14,30 @@ GA::~GA()
 	delete problemData_;
 	delete population_;
 	delete criteria_;
-	for (unsigned int i = 0; i < selectors_.size(); i++)
+	for (PopulationInitializer* populationInitializer : *populationInitializers_)
 	{
-		delete selectors_[i];
+		delete populationInitializer;
 	}
-	selectors_.clear();
-	for (unsigned int i = 0; i < crossoverOperators_.size(); i++)
+	populationInitializers_->clear();
+	delete populationInitializers_;
+	for (Selector* selector : *selectors_)
 	{
-		delete crossoverOperators_[i];
+		delete selector;
 	}
-	crossoverOperators_.clear();
-	for (unsigned int i = 0; i < mutationOperators_.size(); i++)
+	selectors_->clear();
+	delete selectors_;
+	for (CrossoverOperator* crossoverOperator : *crossoverOperators_)
 	{
-		delete mutationOperators_[i];
+		delete crossoverOperator;
 	}
-	mutationOperators_.clear();
+	crossoverOperators_->clear();
+	delete crossoverOperators_;
+	for (MutationOperator* mutationOperator : *mutationOperators_)
+	{
+		delete mutationOperator;
+	}
+	mutationOperators_->clear();
+	delete mutationOperators_;
 	delete evaluator_;
 }
 
@@ -40,6 +51,11 @@ void GA::setThreadCount(unsigned int var)
 	threadCount_ = var;
 }
 
+void GA::setSortOrder(bool reverse)
+{
+	sortOrder_ = reverse;
+}
+
 void GA::setProblemData(ProblemData* problemData)
 {
 	problemData_ = problemData;
@@ -50,17 +66,22 @@ void GA::setTerminationCriteria(TerminationCriteria* criteria)
 	criteria_ = criteria;
 }
 
-void GA::setSelectors(std::vector<Selector*> selectors)
+void GA::setPopulationInitializers(std::vector<PopulationInitializer*>* populationInitializers)
+{
+	populationInitializers_ = populationInitializers;
+}
+
+void GA::setSelectors(std::vector<Selector*>* selectors)
 {
 	selectors_ = selectors;
 }
 
-void GA::setCrossoverOperators(std::vector<CrossoverOperator*> crossoverOperators)
+void GA::setCrossoverOperators(std::vector<CrossoverOperator*>* crossoverOperators)
 {
 	crossoverOperators_ = crossoverOperators;
 }
 
-void GA::setMutationOperators(std::vector<MutationOperator*> mutationOperators)
+void GA::setMutationOperators(std::vector<MutationOperator*>* mutationOperators)
 {
 	mutationOperators_ = mutationOperators;
 }
@@ -88,22 +109,92 @@ void GA::print()
 
 void GA::run()
 {
+	std::clock_t clockStart = std::clock();
+
+	// Population Initialization.
+	if (populationInitializers_->size() == 1)
+	{
+		population_ = populationInitializers_->operator[](0)->createPopulation(populationSize_);
+	}
+	else
+	{
+		population_ = new Population(populationSize_);
+		std::vector<unsigned int> weights = {};
+		unsigned int cumulativeWeight = 0;
+		for (PopulationInitializer* initializer : *populationInitializers_)
+		{
+			unsigned int initializerWeight = initializer->getUseWeight();
+			cumulativeWeight += initializerWeight;
+			weights.push_back(cumulativeWeight);
+		}
+
+		for (unsigned int i = 0; i < populationSize_; i++)
+		{
+			unsigned int initializerSelector = 0;
+			unsigned int weight = rand() % (cumulativeWeight + 1);
+			for (unsigned int j = 0; j < populationInitializers_->size(); j++)
+			{
+				if (weights[j] < weight)
+				{
+					initializerSelector = j;
+					break;
+				}
+			}
+
+			Solution* solution = populationInitializers_->operator[](initializerSelector)->createSolution();
+			population_->addSolution(solution);
+		}
+	}
+	population_->setSortOrder(sortOrder_);
+	population_->sort();
+	population_->assessment();
+
+	createGARunners();
+
+	// Main Loop.
+
 	// TODO
+
+	// Conclusion.
+
+	// TODO
+
+	std::clock_t clockFinish = std::clock();
+	time_ = (clockFinish - clockStart) / CLOCKS_PER_SEC;
 }
 
 Solution* GA::getBestSolution()
 {
-	return bestSolutionHistory_[bestSolutionTracker_];
+	return bestSolutionHistory_->operator[](bestSolutionTracker_);
 }
 
-std::vector<Solution*> GA::getBestSolutionHistory()
+unsigned int GA::getTotalGeneration()
+{
+	return generation_;
+}
+
+long double GA::getTotalTime()
+{
+	return time_;
+}
+
+int GA::getTerminationCode()
+{
+	return terminationCode_;
+}
+
+std::vector<Solution*>* GA::getBestSolutionHistory()
 {
 	return bestSolutionHistory_;
 }
 
 void GA::createGARunners()
 {
-	// TODO
+	// TODO: Single-threaded implementation.
 }
 
+void GA::createNewPopulation()
+{
+	// TODO: Single-threaded implementation.
+}
 

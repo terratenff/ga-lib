@@ -8,3 +8,8 @@ CrossoverOperator::CrossoverOperator(ProblemData* data, Evaluator* evaluator, un
 {
 }
 
+unsigned int CrossoverOperator::getUseWeight()
+{
+	return useWeight_;
+}
+

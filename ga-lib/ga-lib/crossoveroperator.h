@@ -14,10 +14,12 @@ class CROSSOVER_API CrossoverOperator
 {
 public:
 	CrossoverOperator(ProblemData* data, Evaluator* evaluator, unsigned int useWeight);
+	unsigned int getUseWeight();
 	virtual std::pair<Solution*, Solution*> run(Solution* parent1, Solution* parent2) = 0;
-private:
+protected:
 	ProblemData* data_;
 	Evaluator* evaluator_;
+private:
 	unsigned int useWeight_;
 };
 
