@@ -31,11 +31,11 @@ public:
 	void setSortOrder(bool reverse);
 	void setProblemData(ProblemData* problemData);
 	void setTerminationCriteria(TerminationCriteria* criteria);
-	void setPopulationInitializers(std::vector<PopulationInitializer*>* populationInitializers);
-	void setSelectors(std::vector<Selector*>* selectors);
-	void setCrossoverOperators(std::vector<CrossoverOperator*>* crossoverOperators);
-	void setMutationOperators(std::vector<MutationOperator*>* mutationOperators);
-	void setPostGenerationOperators(std::vector<PostGenerationOperator*>* postGenerationOperators);
+	void addPopulationInitializer(PopulationInitializer* populationInitializer);
+	void addSelector(Selector* selector);
+	void addCrossoverOperator(CrossoverOperator* crossoverOperator);
+	void addMutationOperator(MutationOperator* mutationOperator);
+	void addPostGenerationOperator(PostGenerationOperator* postGenerationOperator);
 	void setEvaluator(Evaluator* evaluator);
 	void print();
 	void run();
@@ -63,11 +63,11 @@ private:
 	Population* population_ = nullptr;
 	TerminationCriteria* criteria_ = nullptr;
 
-	std::vector<PopulationInitializer*>* populationInitializers_ = nullptr;
-	std::vector<Selector*>* selectors_ = nullptr;
-	std::vector<CrossoverOperator*>* crossoverOperators_ = nullptr;
-	std::vector<MutationOperator*>* mutationOperators_ = nullptr;
-	std::vector<PostGenerationOperator*>* postGenerationOperators_ = nullptr;
+	std::vector<PopulationInitializer*>* populationInitializers_ = new std::vector<PopulationInitializer*>();
+	std::vector<Selector*>* selectors_ = new std::vector<Selector*>();
+	std::vector<CrossoverOperator*>* crossoverOperators_ = new std::vector<CrossoverOperator*>();
+	std::vector<MutationOperator*>* mutationOperators_ = new std::vector<MutationOperator*>();
+	std::vector<PostGenerationOperator*>* postGenerationOperators_ = new std::vector<PostGenerationOperator*>();
 	Evaluator* evaluator_ = nullptr;
 
 	unsigned int generation_ = 0;

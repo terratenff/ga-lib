@@ -12,9 +12,9 @@ GA::GA()
 
 GA::~GA()
 {
-	delete problemData_;
-	delete population_;
-	delete criteria_;
+	if (problemData_ != nullptr) delete problemData_;
+	if (population_ != nullptr) delete population_;
+	if (criteria_ != nullptr) delete criteria_;
 	for (PopulationInitializer* populationInitializer : *populationInitializers_)
 	{
 		delete populationInitializer;
@@ -39,7 +39,8 @@ GA::~GA()
 	}
 	mutationOperators_->clear();
 	delete mutationOperators_;
-	delete evaluator_;
+	if (evaluator_ != nullptr) delete evaluator_;
+	if (runnerTracker_ != nullptr) delete runnerTracker_;
 }
 
 void GA::setPopulationSize(unsigned int var)
@@ -67,29 +68,29 @@ void GA::setTerminationCriteria(TerminationCriteria* criteria)
 	criteria_ = criteria;
 }
 
-void GA::setPopulationInitializers(std::vector<PopulationInitializer*>* populationInitializers)
+void GA::addPopulationInitializer(PopulationInitializer* populationInitializer)
 {
-	populationInitializers_ = populationInitializers;
+	populationInitializers_->push_back(populationInitializer);
 }
 
-void GA::setSelectors(std::vector<Selector*>* selectors)
+void GA::addSelector(Selector* selector)
 {
-	selectors_ = selectors;
+	selectors_->push_back(selector);
 }
 
-void GA::setCrossoverOperators(std::vector<CrossoverOperator*>* crossoverOperators)
+void GA::addCrossoverOperator(CrossoverOperator* crossoverOperator)
 {
-	crossoverOperators_ = crossoverOperators;
+	crossoverOperators_->push_back(crossoverOperator);
 }
 
-void GA::setMutationOperators(std::vector<MutationOperator*>* mutationOperators)
+void GA::addMutationOperator(MutationOperator* mutationOperator)
 {
-	mutationOperators_ = mutationOperators;
+	mutationOperators_->push_back(mutationOperator);
 }
 
-void GA::setPostGenerationOperators(std::vector<PostGenerationOperator*>* postGenerationOperators)
+void GA::addPostGenerationOperator(PostGenerationOperator* postGenerationOperator)
 {
-	postGenerationOperators_ = postGenerationOperators;
+	postGenerationOperators_->push_back(postGenerationOperator);
 }
 
 void GA::setEvaluator(Evaluator* evaluator)
