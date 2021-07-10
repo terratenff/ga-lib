@@ -16,6 +16,7 @@ public:
 	PostGenerationOperator(ProblemData* data, Evaluator* evaluator, unsigned int generationFrequency);
 	unsigned int getGenerationFrequency();
 	virtual void run(Population* populationNew, Population* populationOld = nullptr) = 0;
+	virtual void print() = 0;
 protected:
 	ProblemData* data_;
 	Evaluator* evaluator_;

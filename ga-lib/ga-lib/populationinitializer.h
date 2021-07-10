@@ -18,6 +18,7 @@ public:
 	unsigned int getUseWeight();
 	virtual Population* createPopulation(unsigned int populationSize) = 0;
 	virtual Solution* createSolution() = 0;
+	virtual void print() = 0;
 protected:
 	ProblemData* data_;
 	Evaluator* evaluator_;

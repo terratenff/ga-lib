@@ -16,6 +16,7 @@ public:
 	MutationOperator(ProblemData* data, Evaluator* evaluator, unsigned int useWeight);
 	unsigned int getUseWeight();
 	virtual void run(Solution* offspring) = 0;
+	virtual void print() = 0;
 protected:
 	ProblemData* data_;
 	Evaluator* evaluator_;

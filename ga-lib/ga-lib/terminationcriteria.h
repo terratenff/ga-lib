@@ -9,18 +9,24 @@
 class TERMINATION_CRITERIA_API TerminationCriteria
 {
 public:
-	TerminationCriteria(unsigned int generationMin, unsigned int generationMax, unsigned int timeMin, unsigned int timeMax, float fitnessMin, float fitnessMax);
+	TerminationCriteria(unsigned int generationMin, unsigned int generationMax, long double timeMin, long double timeMax, float fitnessMin, float fitnessMax);
 	bool checkGenerationMin(unsigned int generationMin);
 	bool checkGenerationMax(unsigned int generationMax);
-	bool checkTimeMin(unsigned int timeMin);
-	bool checkTimeMax(unsigned int timeMax);
-	bool checkFitness(unsigned int fitness);
+	bool checkTimeMin(long double timeMin);
+	bool checkTimeMax(long double timeMax);
+	bool checkFitness(float fitness);
+	const unsigned int getGenerationMin() const;
+	const unsigned int getGenerationMax() const;
+	const long double getTimeMin() const;
+	const long double getTimeMax() const;
+	const float getFitnessMin() const;
+	const float getFitnessMax() const;
 private:
-	unsigned int generationMin_;
-	unsigned int generationMax_;
-	unsigned int timeMin_;
-	unsigned int timeMax_;
-	float fitnessMin_;
-	float fitnessMax_;
+	const unsigned int generationMin_;
+	const unsigned int generationMax_;
+	const long double timeMin_;
+	const long double timeMax_;
+	const float fitnessMin_;
+	const float fitnessMax_;
 };
 

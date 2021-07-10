@@ -14,7 +14,7 @@ public:
 	~Population();
 	void setSortOrder(bool reverse);
 	bool getSortOrder();
-	void addSolution(Solution* solution);
+	void addSolution(Solution* solution, bool suppressException = false);
 	Solution* getSolution(unsigned int i);
 	void replaceSolution(unsigned int i, Solution* solution);
 	const unsigned int size() const;

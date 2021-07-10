@@ -21,7 +21,7 @@ Population::~Population()
 {
 	for (Solution* solution : *population_)
 	{
-		delete solution;
+		if (solution != nullptr) delete solution;
 	}
 	population_->clear();
 	delete population_;
@@ -37,13 +37,13 @@ bool Population::getSortOrder()
 	return sortOrder_;
 }
 
-void Population::addSolution(Solution* solution)
+void Population::addSolution(Solution* solution, bool suppressException)
 {
 	if (population_->size() < population_->capacity())
 	{
 		population_->push_back(solution);
 	}
-	else
+	else if (!suppressException)
 	{
 		throw std::out_of_range("Population size exceeded set limit");
 	}
@@ -87,13 +87,13 @@ void Population::sort()
 	if (sortOrder_)
 	{
 		std::sort(population_->begin(), population_->end(), [](Solution* lhs, Solution* rhs) {
-			return lhs->getFitness() > rhs->getFitness();
+			return lhs > rhs;
 		});
 	}
 	else
 	{
 		std::sort(population_->begin(), population_->end(), [](Solution* lhs, Solution* rhs) {
-			return lhs->getFitness() < rhs->getFitness();
+			return lhs < rhs;
 		});
 	}
 }

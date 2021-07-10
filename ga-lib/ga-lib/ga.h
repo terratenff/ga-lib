@@ -9,6 +9,7 @@
 #include "selector.h"
 #include "crossoveroperator.h"
 #include "mutationoperator.h"
+#include "postgenerationoperator.h"
 #include "evaluator.h"
 #include "resultdata.h"
 #include <vector>
@@ -34,6 +35,7 @@ public:
 	void setSelectors(std::vector<Selector*>* selectors);
 	void setCrossoverOperators(std::vector<CrossoverOperator*>* crossoverOperators);
 	void setMutationOperators(std::vector<MutationOperator*>* mutationOperators);
+	void setPostGenerationOperators(std::vector<PostGenerationOperator*>* postGenerationOperators);
 	void setEvaluator(Evaluator* evaluator);
 	void print();
 	void run();
@@ -43,15 +45,15 @@ public:
 
 	/// <summary>
 	/// Getter for a code integer that is used to determine whether the algorithm was terminated prematurely.
-	/// 0: No premature termination / Undefined. 1: A fitness criterion was broken. 2: Minimum generation criterion was broken.
-	/// 3: Maximum generation criterion was broken. 4: Minimum time criterion was broken. 5: Maximum time criterion was broken.
-	/// None of the above: Something unexpected happened.
+	/// -1: Algorithm has not been run yet. 0: No premature termination / Undefined. 1: A fitness criterion was broken.
+	/// 2: Minimum generation criterion was broken. 3: Maximum generation criterion was broken. 4: Minimum time criterion was broken.
+	/// 5: Maximum time criterion was broken. None of the above: Something unexpected happened.
 	/// </summary>
 	int getTerminationCode();
 	std::vector<Solution*>* getBestSolutionHistory();
 private:
 	virtual void createGARunners();
-	virtual void createNewPopulation();
+	virtual Population* createNewPopulation();
 
 	unsigned int populationSize_ = 0;
 	unsigned int threadCount_ = 1;
@@ -64,13 +66,15 @@ private:
 	std::vector<PopulationInitializer*>* populationInitializers_ = nullptr;
 	std::vector<Selector*>* selectors_ = nullptr;
 	std::vector<CrossoverOperator*>* crossoverOperators_ = nullptr;
-	std::vector<MutationOperator*>*mutationOperators_ = nullptr;
+	std::vector<MutationOperator*>* mutationOperators_ = nullptr;
+	std::vector<PostGenerationOperator*>* postGenerationOperators_ = nullptr;
 	Evaluator* evaluator_ = nullptr;
 
 	unsigned int generation_ = 0;
+	unsigned int generationMin_ = 0;
 	long double time_ = 0;
-	int terminationCode_ = 0;
-	std::vector<Solution*>* bestSolutionHistory_ = nullptr;
+	int terminationCode_ = -1;
+	std::vector<Solution*>* bestSolutionHistory_ = new std::vector<Solution*>();
 	unsigned int bestSolutionTracker_ = 0;
 	std::unordered_map<unsigned int, bool>* runnerTracker_ = nullptr;
 

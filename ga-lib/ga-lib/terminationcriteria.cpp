@@ -4,8 +4,8 @@
 TerminationCriteria::TerminationCriteria(
 	unsigned int generationMin,
 	unsigned int generationMax,
-	unsigned int timeMin,
-	unsigned int timeMax,
+	long double timeMin,
+	long double timeMax,
 	float fitnessMin,
 	float fitnessMax) :
 	generationMin_(generationMin),
@@ -29,20 +29,50 @@ bool TerminationCriteria::checkGenerationMax(unsigned int generationMax)
 	else return false;
 }
 
-bool TerminationCriteria::checkTimeMin(unsigned int timeMin)
+bool TerminationCriteria::checkTimeMin(long double timeMin)
 {
 	if (timeMin > timeMin_) return true;
 	else return false;
 }
 
-bool TerminationCriteria::checkTimeMax(unsigned int timeMax)
+bool TerminationCriteria::checkTimeMax(long double timeMax)
 {
 	if (timeMax_ > timeMax_) return true;
 	else return false;
 }
 
-bool TerminationCriteria::checkFitness(unsigned int fitness)
+bool TerminationCriteria::checkFitness(float fitness)
 {
 	if (fitness > fitnessMax_ || fitness < fitnessMin_) return true;
 	else return false;
+}
+
+const unsigned int TerminationCriteria::getGenerationMin() const
+{
+	return generationMin_;
+}
+
+const unsigned int TerminationCriteria::getGenerationMax() const
+{
+	return generationMax_;
+}
+
+const long double TerminationCriteria::getTimeMin() const
+{
+	return timeMin_;
+}
+
+const long double TerminationCriteria::getTimeMax() const
+{
+	return timeMax_;
+}
+
+const float TerminationCriteria::getFitnessMin() const
+{
+	return fitnessMin_;
+}
+
+const float TerminationCriteria::getFitnessMax() const
+{
+	return fitnessMax_;
 }

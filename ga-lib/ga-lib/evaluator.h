@@ -15,6 +15,7 @@ public:
 	Evaluator(ProblemData* data);
 	virtual float evaluateFitness(Solution* solution) = 0;
 	virtual float evaluatePenalty(Solution* solution);
+	virtual void print() = 0;
 protected:
 	ProblemData* data_;
 };

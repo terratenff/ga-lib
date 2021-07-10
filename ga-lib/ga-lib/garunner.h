@@ -25,6 +25,7 @@ public:
 	void setCrossoverOperators(std::vector<CrossoverOperator*>* crossoverOperators);
 	void setMutationOperators(std::vector<MutationOperator*>* mutationOperators);
 	void setEvaluator(Evaluator* evaluator);
+	void setSolutionTimeout(long double timeMin);
 
 	void createSubPopulation();
 	Population* getSubPopulation();
@@ -36,11 +37,18 @@ private:
 
 	int id_;
 	unsigned int subPopulationSize_;
+	long double timeMin_ = 0;
 	Population* referencePopulation_ = nullptr;
 	Population* subPopulation_ = nullptr;
 	std::vector<Selector*>* selectors_ = nullptr;
 	std::vector<CrossoverOperator*>* crossoverOperators_ = nullptr;
 	std::vector<MutationOperator*>* mutationOperators_ = nullptr;
+	std::vector<unsigned int>* selectorWeights_ = nullptr;
+	std::vector<unsigned int>* crossoverWeights_ = nullptr;
+	std::vector<unsigned int>* mutationWeights_ = nullptr;
+	unsigned int selectorTotal_ = 0;
+	unsigned int crossoverTotal_ = 0;
+	unsigned int mutationTotal_ = 0;
 	Evaluator* evaluator_ = nullptr;
 };
 
