@@ -5,7 +5,8 @@
 
 GARunner::GARunner(int id, unsigned int subPopulationSize):
 	id_(id),
-	subPopulationSize_(subPopulationSize)
+	subPopulationSize_(subPopulationSize),
+	rng_(new RNG(id))
 {
 }
 
@@ -15,6 +16,7 @@ GARunner::~GARunner()
 	delete selectorWeights_;
 	delete crossoverWeights_;
 	delete mutationWeights_;
+	delete rng_;
 }
 
 int GARunner::getId()
@@ -85,8 +87,8 @@ void GARunner::createSubPopulation()
 		// 1. Use random selectors to find parent candidates.
 		unsigned int selectedIndex1 = 0;
 		unsigned int selectedIndex2 = 0;
-		unsigned int weight1 = rand() % (selectorTotal_ + 1);
-		unsigned int weight2 = rand() % (selectorTotal_ + 1);
+		unsigned int weight1 = rng_->rand() % (selectorTotal_ + 1);
+		unsigned int weight2 = rng_->rand() % (selectorTotal_ + 1);
 		bool selected1 = false;
 		bool selected2 = false;
 		for (unsigned int j = 0; j < selectors_->size(); j++)
@@ -104,14 +106,14 @@ void GARunner::createSubPopulation()
 			if (selected1 && selected2) break;
 		}
 
-		Solution* parent1 = selectors_->operator[](selectedIndex1)->select(referencePopulation_);
-		Solution* parent2 = selectors_->operator[](selectedIndex2)->select(referencePopulation_);
+		Solution* parent1 = selectors_->operator[](selectedIndex1)->select(referencePopulation_, rng_);
+		Solution* parent2 = selectors_->operator[](selectedIndex2)->select(referencePopulation_, rng_);
 
 		// 2. Apply a random crossover operator. Utilize operator weights.
 		selectedIndex1 = 0;
 		selectedIndex2 = 0;
-		weight1 = rand() % (crossoverTotal_ + 1);
-		weight2 = rand() % (crossoverTotal_ + 1);
+		weight1 = rng_->rand() % (crossoverTotal_ + 1);
+		weight2 = rng_->rand() % (crossoverTotal_ + 1);
 		selected1 = false;
 		selected2 = false;
 		for (unsigned int j = 0; j < crossoverOperators_->size(); j++)
@@ -129,15 +131,15 @@ void GARunner::createSubPopulation()
 			if (selected1 && selected2) break;
 		}
 
-		std::pair<Solution*, Solution*> offspringPair = crossoverOperators_->operator[](selectedIndex1)->run(parent1, parent2);
+		std::pair<Solution*, Solution*> offspringPair = crossoverOperators_->operator[](selectedIndex1)->run(parent1, parent2, rng_);
 		Solution* offspring1 = offspringPair.first;
 		Solution* offspring2 = offspringPair.second;
 
 		// 3. Apply a random mutation operator. Utilize operator weights.
 		selectedIndex1 = 0;
 		selectedIndex2 = 0;
-		weight1 = rand() % (mutationTotal_ + 1);
-		weight2 = rand() % (mutationTotal_ + 1);
+		weight1 = rng_->rand() % (mutationTotal_ + 1);
+		weight2 = rng_->rand() % (mutationTotal_ + 1);
 		selected1 = false;
 		selected2 = false;
 		for (unsigned int j = 0; j < mutationOperators_->size(); j++)
@@ -155,8 +157,8 @@ void GARunner::createSubPopulation()
 			if (selected1 && selected2) break;
 		}
 
-		mutationOperators_->operator[](selectedIndex1)->run(offspring1);
-		mutationOperators_->operator[](selectedIndex1)->run(offspring2);
+		mutationOperators_->operator[](selectedIndex1)->run(offspring1, rng_);
+		mutationOperators_->operator[](selectedIndex1)->run(offspring2, rng_);
 
 		// 4. Apply the final evaluation.
 		evaluator_->evaluateFitness(offspring1);

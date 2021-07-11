@@ -2,6 +2,7 @@
 
 #include "population.h"
 #include "solution.h"
+#include "rng.h"
 
 #ifdef GALIB_EXPORTS
 #define SELECTOR_API __declspec(dllexport)
@@ -14,7 +15,7 @@ class SELECTOR_API Selector
 public:
 	Selector(unsigned int candidateCount, unsigned int useWeight);
 	unsigned int getUseWeight();
-	virtual Solution* select(Population* population) = 0;
+	virtual Solution* select(Population* population, RNG* rng) = 0;
 	virtual void print() = 0;
 protected:
 	unsigned int candidateCount_;

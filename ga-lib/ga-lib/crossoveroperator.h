@@ -3,6 +3,7 @@
 #include "solution.h"
 #include "problemdata.h"
 #include "evaluator.h"
+#include "rng.h"
 
 #ifdef GALIB_EXPORTS
 #define CROSSOVER_API __declspec(dllexport)
@@ -15,7 +16,7 @@ class CROSSOVER_API CrossoverOperator
 public:
 	CrossoverOperator(ProblemData* data, Evaluator* evaluator, unsigned int useWeight);
 	unsigned int getUseWeight();
-	virtual std::pair<Solution*, Solution*> run(Solution* parent1, Solution* parent2) = 0;
+	virtual std::pair<Solution*, Solution*> run(Solution* parent1, Solution* parent2, RNG* rng) = 0;
 	virtual void print() = 0;
 protected:
 	ProblemData* data_;

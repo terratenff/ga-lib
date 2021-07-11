@@ -163,6 +163,7 @@
     <ClInclude Include="postgenerationoperator.h" />
     <ClInclude Include="problemdata.h" />
     <ClInclude Include="resultdata.h" />
+    <ClInclude Include="rng.h" />
     <ClInclude Include="selector.h" />
     <ClInclude Include="solution.h" />
     <ClInclude Include="terminationcriteria.h" />
@@ -185,6 +186,7 @@
     <ClCompile Include="postgenerationoperator.cpp" />
     <ClCompile Include="problemdata.cpp" />
     <ClCompile Include="resultdata.cpp" />
+    <ClCompile Include="rng.cpp" />
     <ClCompile Include="selector.cpp" />
     <ClCompile Include="solution.cpp" />
     <ClCompile Include="terminationcriteria.cpp" />

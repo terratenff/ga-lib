@@ -7,6 +7,7 @@
 #include "crossoveroperator.h"
 #include "mutationoperator.h"
 #include "evaluator.h"
+#include "rng.h"
 
 #ifdef GALIB_EXPORTS
 #define RUNNER_API __declspec(dllexport)
@@ -50,5 +51,7 @@ private:
 	unsigned int crossoverTotal_ = 0;
 	unsigned int mutationTotal_ = 0;
 	Evaluator* evaluator_ = nullptr;
+
+	RNG* rng_;
 };
 
