@@ -59,7 +59,7 @@ private:
 	unsigned int threadCount_ = 1;
 	bool sortOrder_ = false;
 	ProblemData* problemData_ = nullptr;
-	std::vector<GARunner>* runners_ = nullptr;
+	std::vector<GARunner*>* runners_ = new std::vector<GARunner*>();
 	Population* population_ = nullptr;
 	TerminationCriteria* criteria_ = nullptr;
 

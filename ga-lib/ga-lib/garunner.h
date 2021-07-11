@@ -43,9 +43,9 @@ private:
 	std::vector<Selector*>* selectors_ = nullptr;
 	std::vector<CrossoverOperator*>* crossoverOperators_ = nullptr;
 	std::vector<MutationOperator*>* mutationOperators_ = nullptr;
-	std::vector<unsigned int>* selectorWeights_ = nullptr;
-	std::vector<unsigned int>* crossoverWeights_ = nullptr;
-	std::vector<unsigned int>* mutationWeights_ = nullptr;
+	std::vector<unsigned int>* selectorWeights_ = new std::vector<unsigned int>();
+	std::vector<unsigned int>* crossoverWeights_ = new std::vector<unsigned int>();
+	std::vector<unsigned int>* mutationWeights_ = new std::vector<unsigned int>();
 	unsigned int selectorTotal_ = 0;
 	unsigned int crossoverTotal_ = 0;
 	unsigned int mutationTotal_ = 0;

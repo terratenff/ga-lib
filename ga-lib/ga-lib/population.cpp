@@ -19,11 +19,7 @@ Population::Population(unsigned int size):
 
 Population::~Population()
 {
-	for (Solution* solution : *population_)
-	{
-		if (solution != nullptr) delete solution;
-	}
-	population_->clear();
+	this->clear();
 	delete population_;
 }
 
@@ -54,11 +50,20 @@ Solution* Population::getSolution(unsigned int i)
 	return population_->operator[](i);
 }
 
-void Population::replaceSolution(unsigned int i, Solution* solution)
+void Population::replaceSolution(unsigned int i, Solution* solution, bool deleteSolution)
 {
 	Solution* subject = population_->operator[](i);
-	delete subject;
+	if (deleteSolution) delete subject;
 	population_->operator[](i) = solution;
+}
+
+void Population::mergePopulation(Population* subPopulation)
+{
+	for (unsigned int i = 0; i < subPopulation->size(); i++)
+	{
+		this->addSolution(subPopulation->getSolution(i));
+		subPopulation->replaceSolution(i, nullptr, false);
+	}
 }
 
 const unsigned int Population::size() const
@@ -87,13 +92,13 @@ void Population::sort()
 	if (sortOrder_)
 	{
 		std::sort(population_->begin(), population_->end(), [](Solution* lhs, Solution* rhs) {
-			return lhs > rhs;
+			return *lhs > *rhs;
 		});
 	}
 	else
 	{
 		std::sort(population_->begin(), population_->end(), [](Solution* lhs, Solution* rhs) {
-			return lhs < rhs;
+			return *lhs < *rhs;
 		});
 	}
 }
@@ -102,7 +107,7 @@ void Population::clear()
 {
 	for (Solution* solution : *population_)
 	{
-		delete solution;
+		if (solution != nullptr) delete solution;
 	}
 	population_->clear();
 }

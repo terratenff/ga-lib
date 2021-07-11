@@ -3,7 +3,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <limits>
-#include <ctime>
+#include <chrono>
 #include <functional>
 
 GA::GA()
@@ -21,6 +21,12 @@ GA::~GA()
 	}
 	populationInitializers_->clear();
 	delete populationInitializers_;
+	for (GARunner* runner : *runners_)
+	{
+		delete runner;
+	}
+	runners_->clear();
+	delete runners_;
 	for (Selector* selector : *selectors_)
 	{
 		delete selector;
@@ -239,7 +245,7 @@ void GA::run()
 		postGenerationOperators_ = new std::vector<PostGenerationOperator*>();
 	}
 
-	std::clock_t clockStart = std::clock();
+	std::chrono::steady_clock::time_point clockStart = std::chrono::steady_clock::now();
 
 	// Population Initialization.
 	if (populationInitializers_->size() == 1)
@@ -280,8 +286,8 @@ void GA::run()
 	population_->assessment();
 	bestSolutionHistory_->push_back(population_->getSolution(0));
 
-	std::clock_t clockInitialization = std::clock();
-	std::string initializationTime = std::to_string((clockInitialization - clockStart) / CLOCKS_PER_SEC);
+	std::chrono::steady_clock::time_point clockInitialization = std::chrono::steady_clock::now();
+	std::string initializationTime = std::to_string(std::chrono::duration_cast<std::chrono::nanoseconds>(clockInitialization - clockStart).count() / 1000000000.0);
 	std::cout << "Population has been initialized (Time taken: " + initializationTime + " s)" << std::endl;
 
 	createGARunners();
@@ -289,12 +295,12 @@ void GA::run()
 	if (sortOrder_)
 	{
 		// Reversed (the higher fitness, the better)
-		solutionComparator = [](Solution* lhs, Solution* rhs) {return lhs > rhs; };
+		solutionComparator = [](Solution* lhs, Solution* rhs) {return *lhs > *rhs; };
 	}
 	else
 	{
 		// Normal (the lower fitness, the better)
-		solutionComparator = [](Solution* lhs, Solution* rhs) {return lhs < rhs; };
+		solutionComparator = [](Solution* lhs, Solution* rhs) {return *lhs < *rhs; };
 	}
 
 	// Main Loop.
@@ -310,7 +316,7 @@ void GA::run()
 		float overallBestFitness = bestSolutionHistory_->operator[](bestSolutionTracker_)->getFitness();
 		std::string fitnessGen = "Best Generation Fitness / Best Overall Fitness: " + std::to_string(generationBestFitness) + " / " + std::to_string(overallBestFitness);
 		std::cout << maxGen << minGen << fitnessGen << std::endl;
-
+		
 		Population* newPopulation = createNewPopulation();
 		if (newPopulation == nullptr)
 		{
@@ -333,8 +339,8 @@ void GA::run()
 				postGenerationOperator->run(newPopulation, population_);
 			}
 		}
-
-		population_->replaceSolution(0, nullptr);
+		
+		population_->replaceSolution(0, nullptr, false);
 		delete population_;
 		population_ = newPopulation;
 		if (postGenerationOperatorsUsed)
@@ -342,15 +348,21 @@ void GA::run()
 			population_->sort();
 			population_->assessment();
 		}
-
+		
 		bestSolutionHistory_->push_back(population_->getSolution(0));
 		if (solutionComparator(bestSolutionHistory_->operator[](bestSolutionHistory_->size() - 1), bestSolutionHistory_->operator[](bestSolutionTracker_)))
 		{
 			bestSolutionTracker_ = bestSolutionHistory_->size() - 1;
+			generationMin_ = 0;
+		}
+		
+		for (GARunner* runner : *runners_)
+		{
+			runner->setReferencePopulation(population_);
 		}
 
-		std::clock_t clockFinish = std::clock();
-		time_ = (clockFinish - clockStart) / CLOCKS_PER_SEC;
+		std::chrono::steady_clock::time_point clockFinish = std::chrono::steady_clock::now();
+		time_ = std::chrono::duration_cast<std::chrono::nanoseconds>(clockFinish - clockStart).count() / 1000000000.0;
 	}
 
 	// Conclusion.
@@ -412,19 +424,25 @@ std::vector<Solution*>* GA::getBestSolutionHistory()
 
 void GA::createGARunners()
 {
-	GARunner runner(0, populationSize_);
-	runner.setReferencePopulation(population_);
-	runner.setSelectors(selectors_);
-	runner.setCrossoverOperators(crossoverOperators_);
-	runner.setMutationOperators(mutationOperators_);
-	runner.setEvaluator(evaluator_);
-	runner.setSolutionTimeout(criteria_->getTimeMin());
+	GARunner* runner = new GARunner(0, populationSize_);
+	runner->setReferencePopulation(population_);
+	runner->setSelectors(selectors_);
+	runner->setCrossoverOperators(crossoverOperators_);
+	runner->setMutationOperators(mutationOperators_);
+	runner->setEvaluator(evaluator_);
+	runner->setSolutionTimeout(criteria_->getTimeMin());
 	runners_->push_back(runner);
 }
 
 Population* GA::createNewPopulation()
 {
-	runners_->operator[](0).createSubPopulation();
-	return runners_->operator[](0).getSubPopulation();
+	runners_->operator[](0)->createSubPopulation();
+	if (runners_->operator[](0)->getSubPopulation() != nullptr)
+	{
+		Population* population = new Population(populationSize_);
+		population->mergePopulation(runners_->operator[](0)->getSubPopulation());
+		return population;
+	}
+	else return nullptr;
 }
 

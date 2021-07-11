@@ -19,13 +19,13 @@ TerminationCriteria::TerminationCriteria(
 
 bool TerminationCriteria::checkGenerationMin(unsigned int generationMin)
 {
-	if (generationMin > generationMin_) return true;
+	if (generationMin >= generationMin_) return true;
 	else return false;
 }
 
 bool TerminationCriteria::checkGenerationMax(unsigned int generationMax)
 {
-	if (generationMax > generationMax_) return true;
+	if (generationMax >= generationMax_) return true;
 	else return false;
 }
 
@@ -37,7 +37,7 @@ bool TerminationCriteria::checkTimeMin(long double timeMin)
 
 bool TerminationCriteria::checkTimeMax(long double timeMax)
 {
-	if (timeMax_ > timeMax_) return true;
+	if (timeMax > timeMax_) return true;
 	else return false;
 }
 

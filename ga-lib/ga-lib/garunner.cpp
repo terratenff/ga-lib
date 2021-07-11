@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "garunner.h"
 #include <stdexcept>
+#include <chrono>
 
 GARunner::GARunner(int id, unsigned int subPopulationSize):
 	id_(id),
@@ -10,7 +11,7 @@ GARunner::GARunner(int id, unsigned int subPopulationSize):
 
 GARunner::~GARunner()
 {
-	delete subPopulation_;
+	if (subPopulation_ != nullptr) delete subPopulation_;
 	delete selectorWeights_;
 	delete crossoverWeights_;
 	delete mutationWeights_;
@@ -79,6 +80,8 @@ void GARunner::createSubPopulation()
 
 	for (unsigned int i = 0; i < subPopulationSize_; i+=2)
 	{
+		std::chrono::steady_clock::time_point clockStart = std::chrono::steady_clock::now();
+
 		// 1. Use random selectors to find parent candidates.
 		unsigned int selectedIndex1 = 0;
 		unsigned int selectedIndex2 = 0;
@@ -164,6 +167,15 @@ void GARunner::createSubPopulation()
 		// 5. Push to subPopulation_.
 		subPopulation_->addSolution(offspring1);
 		subPopulation_->addSolution(offspring2, true);
+
+		std::chrono::steady_clock::time_point clockFinish = std::chrono::steady_clock::now();
+
+		if (std::chrono::duration_cast<std::chrono::nanoseconds>(clockFinish - clockStart).count() / 1000000000.0 > timeMin_)
+		{
+			delete subPopulation_;
+			subPopulation_ = nullptr;
+			break;
+		}
 	}
 
 	referencePopulation_ = nullptr;

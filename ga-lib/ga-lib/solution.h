@@ -12,9 +12,10 @@ class GA_SOLUTION_API Solution
 {
 public:
 	Solution();
-	bool operator<(Solution* other);
-	bool operator>(Solution* other);
-	bool operator==(Solution* other);
+	virtual ~Solution() = 0;
+	bool operator<(Solution& other);
+	bool operator>(Solution& other);
+	bool operator==(Solution& other);
 	void setFitness(float var);
 	void setPenalty(float var);
 	float getFitness();

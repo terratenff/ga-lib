@@ -16,7 +16,8 @@ public:
 	bool getSortOrder();
 	void addSolution(Solution* solution, bool suppressException = false);
 	Solution* getSolution(unsigned int i);
-	void replaceSolution(unsigned int i, Solution* solution);
+	void replaceSolution(unsigned int i, Solution* solution, bool deleteSolution = true);
+	void mergePopulation(Population* subPopulation);
 	const unsigned int size() const;
 	void assessment();
 	void sort();
