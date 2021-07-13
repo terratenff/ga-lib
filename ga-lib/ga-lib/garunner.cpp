@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "garunner.h"
-#include <stdexcept>
 #include <chrono>
 
 GARunner::GARunner(int id, unsigned int subPopulationSize):
@@ -190,16 +189,13 @@ Population* GARunner::getSubPopulation()
 
 void GARunner::run()
 {
-	throw std::exception("GARunner::run() is reserved for multi-threaded implementations.");
 }
 
 void GARunner::terminate()
 {
-	throw std::exception("GARunner::terminate() is reserved for multi-threaded implementations.");
 }
 
 void GARunner::threadFunction()
 {
-	throw std::exception("GARunner::threadFunction() is reserved for multi-threaded implementations.");
 }
 
