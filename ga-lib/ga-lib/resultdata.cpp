@@ -35,7 +35,7 @@ void ResultData::save(std::string path)
 	text += "----------------------------------------------------------------------------\n";
 
 	std::ofstream file;
-	file.open(path + ".txt");
+	file.open(path);
 	file << text;
 	file.close();
 }

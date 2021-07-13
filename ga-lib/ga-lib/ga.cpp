@@ -46,7 +46,6 @@ GA::~GA()
 	mutationOperators_->clear();
 	delete mutationOperators_;
 	if (evaluator_ != nullptr) delete evaluator_;
-	if (runnerTracker_ != nullptr) delete runnerTracker_;
 }
 
 void GA::setPopulationSize(unsigned int var)
@@ -62,6 +61,11 @@ void GA::setThreadCount(unsigned int var)
 void GA::setSortOrder(bool reverse)
 {
 	sortOrder_ = reverse;
+}
+
+void GA::setPrintState(bool enabled)
+{
+	printState_ = enabled;
 }
 
 void GA::setProblemData(ProblemData* problemData)
@@ -206,6 +210,8 @@ void GA::print()
 		std::cout << "--- Execution Results ---" << std::endl;
 		std::cout << "- Total Generation Count: " << std::to_string(generation_) << std::endl;
 		std::cout << "- Total Time Taken (s):   " << std::to_string(time_) << std::endl;
+		std::cout << "-- Final Population Details --" << std::endl;
+		population_->print();
 		std::cout << "-- Discovered Optimal Solution --" << std::endl;
 		bestSolutionHistory_->operator[](bestSolutionTracker_)->print();
 	}
@@ -214,6 +220,12 @@ void GA::print()
 void GA::run()
 {
 	// Pre-Initialization. (Checks if everything necessary has been set.)
+	if (terminationCode_ != -1)
+	{
+		// GA instance should only be executed once.
+		std::cout << "GA has already been run." << std::endl;
+		return;
+	}
 	if (problemData_ == nullptr ||
 		criteria_ == nullptr ||
 		populationInitializers_ == nullptr ||
@@ -286,9 +298,12 @@ void GA::run()
 	population_->assessment();
 	bestSolutionHistory_->push_back(population_->getSolution(0));
 
-	std::chrono::steady_clock::time_point clockInitialization = std::chrono::steady_clock::now();
-	std::string initializationTime = std::to_string(std::chrono::duration_cast<std::chrono::nanoseconds>(clockInitialization - clockStart).count() / 1000000000.0);
-	std::cout << "Population has been initialized (Time taken: " + initializationTime + " s)" << std::endl;
+	if (printState_)
+	{
+		std::chrono::steady_clock::time_point clockInitialization = std::chrono::steady_clock::now();
+		std::string initializationTime = std::to_string(std::chrono::duration_cast<std::chrono::nanoseconds>(clockInitialization - clockStart).count() / 1000000000.0);
+		std::cout << "Population has been initialized (Time taken: " + initializationTime + " s)" << std::endl;
+	}
 
 	createGARunners();
 	std::function<bool(Solution*, Solution*)> solutionComparator;
@@ -308,14 +323,29 @@ void GA::run()
 	const unsigned int GENERATION_MIN = criteria_->getGenerationMin();
 	const long double TIME_MAX = criteria_->getTimeMax();
 	const long double TIME_MIN = criteria_->getTimeMin();
+
+	std::function<void()> loopPrinter;
+	if (printState_)
+	{
+		// Print GA status for each generation.
+		loopPrinter = [&]() {
+			std::string maxGen = "Generation: " + std::to_string(generation_ + 1) + " / " + std::to_string(GENERATION_MAX) + " | ";
+			std::string minGen = "Minimum Generation: " + std::to_string(generationMin_ + 1) + " / " + std::to_string(GENERATION_MIN) + " | ";
+			float generationBestFitness = bestSolutionHistory_->operator[](generation_)->getFitness();
+			float overallBestFitness = bestSolutionHistory_->operator[](bestSolutionTracker_)->getFitness();
+			std::string fitnessGen = "Best Generation Fitness / Best Overall Fitness: " + std::to_string(generationBestFitness) + " / " + std::to_string(overallBestFitness);
+			std::cout << maxGen << minGen << fitnessGen << std::endl;
+		};
+	}
+	else
+	{
+		// Print nothing.
+		loopPrinter = []() {};
+	}
+
 	while (!criteria_->checkGenerationMin(generationMin_) && !criteria_->checkGenerationMax(generation_) && !criteria_->checkTimeMax(time_))
 	{
-		std::string maxGen = "Generation: " + std::to_string(generation_ + 1) + " / " + std::to_string(GENERATION_MAX) + " | ";
-		std::string minGen = "Minimum Generation: " + std::to_string(generationMin_ + 1) + " / " + std::to_string(GENERATION_MIN) + " | ";
-		float generationBestFitness = bestSolutionHistory_->operator[](generation_)->getFitness();
-		float overallBestFitness = bestSolutionHistory_->operator[](bestSolutionTracker_)->getFitness();
-		std::string fitnessGen = "Best Generation Fitness / Best Overall Fitness: " + std::to_string(generationBestFitness) + " / " + std::to_string(overallBestFitness);
-		std::cout << maxGen << minGen << fitnessGen << std::endl;
+		loopPrinter();
 		
 		Population* newPopulation = createNewPopulation();
 		if (newPopulation == nullptr)
@@ -366,6 +396,11 @@ void GA::run()
 	}
 
 	// Conclusion.
+
+	for (GARunner* runner : *runners_)
+	{
+		runner->terminate();
+	}
 	
 	if (criteria_->checkFitness(bestSolutionHistory_->operator[](bestSolutionTracker_)->getFitness()))
 	{
