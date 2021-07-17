@@ -9,7 +9,8 @@
 #endif
 
 /// <summary>
-/// Simple wrapper for a pseudo random number generator (mt19937).
+/// Simple wrapper for a pseudo random number generator. Uses "std::rand" Inherit this class to use different
+/// random number generators: "std::rand" is not recommended for multithreaded implementations.
 /// </summary>
 class GA_RNG_API RNG
 {
@@ -18,26 +19,22 @@ public:
 	/// <summary>
 	/// Creates a random number generator. It is expected to be created dynamically (raw pointer).
 	/// </summary>
-	/// <param name="seed"></param>
-	RNG(unsigned int seed);
+	RNG(int seed);
 	~RNG();
+
+	/// <summary>
+	/// Createa an identical copy (except for the seed) of the random number generator.
+	/// </summary>
+	/// <param name="seed">Seed of the copy.</param>
+	/// <returns>Copy of this pseudo random number generator.</returns>
+	virtual RNG* clone(int seed);
 
 	/// <summary>
 	/// Generates a random unsigned integer.
 	/// </summary>
 	/// <returns>Random unsigned integer.</returns>
-	unsigned int rand();
-
-	/// <summary>
-	/// Getter for the random number generator. This should be used whenever container shuffling is involved.
-	/// </summary>
-	/// <returns>mt19937 random number generator.</returns>
-	std::mt19937* engine();
+	virtual unsigned int rand();
 private:
-
-	/// <summary>
-	/// Random number generator.
-	/// </summary>
-	std::mt19937* rng_;
+	int seed_;
 };
 

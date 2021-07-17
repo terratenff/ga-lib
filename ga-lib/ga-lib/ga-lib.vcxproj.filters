@@ -63,6 +63,12 @@
     <ClInclude Include="rng.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="nullcrossover.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="nullmutation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -111,6 +117,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="rng.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nullcrossover.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nullmutation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -82,6 +82,12 @@ public:
 	void setPrintState(bool enabled);
 
 	/// <summary>
+	/// Setter for the pseudo random number generator. The base class RNG can be used, but it is not recommended in multithreaded implementations.
+	/// </summary>
+	/// <param name="rng">Pseudo random number generator. Base class uses "std::rand()".</param>
+	void setRandomNumberGenerator(RNG* rng);
+
+	/// <summary>
 	/// Setter for problem data.
 	/// </summary>
 	/// <param name="problemData">Information related to the problem that is to be solved.</param>
@@ -214,6 +220,11 @@ private:
 	/// its execution every generation (and initialization).
 	/// </summary>
 	bool printState_ = true;
+
+	/// <summary>
+	/// Pseudo random number generator. Runner instances are given copies of these with different seeds.
+	/// </summary>
+	RNG* rng_ = nullptr;
 
 	/// <summary>
 	/// Instance of problem data. Contains information that is relevant to the problem that is to be solved.

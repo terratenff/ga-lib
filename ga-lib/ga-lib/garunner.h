@@ -73,6 +73,12 @@ public:
 	void setEvaluator(Evaluator* evaluator);
 
 	/// <summary>
+	/// Setter for the pseudo random number generator.
+	/// </summary>
+	/// <param name="rng">Pseudo random number generator. GA instance provides this.</param>
+	void setRandomNumberGenerator(RNG* rng);
+
+	/// <summary>
 	/// Setter for the duration of time that a runner is allowed to spend in creating new individuals.
 	/// If this time is exceeded, the algorithm will be terminated. This is equivalent to minimum time criterion.
 	/// </summary>
@@ -196,6 +202,6 @@ private:
 	/// <summary>
 	/// Random Number Generator. This should be used every time random operations are involved.
 	/// </summary>
-	RNG* rng_;
+	RNG* rng_ = nullptr;
 };
 

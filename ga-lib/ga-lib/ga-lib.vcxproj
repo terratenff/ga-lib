@@ -157,6 +157,8 @@
     <ClInclude Include="ga.h" />
     <ClInclude Include="garunner.h" />
     <ClInclude Include="mutationoperator.h" />
+    <ClInclude Include="nullcrossover.h" />
+    <ClInclude Include="nullmutation.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="population.h" />
     <ClInclude Include="populationinitializer.h" />
@@ -175,6 +177,8 @@
     <ClCompile Include="ga.cpp" />
     <ClCompile Include="garunner.cpp" />
     <ClCompile Include="mutationoperator.cpp" />
+    <ClCompile Include="nullcrossover.cpp" />
+    <ClCompile Include="nullmutation.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

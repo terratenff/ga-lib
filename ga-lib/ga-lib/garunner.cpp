@@ -69,6 +69,11 @@ void GARunner::setEvaluator(Evaluator* evaluator)
 	evaluator_ = evaluator;
 }
 
+void GARunner::setRandomNumberGenerator(RNG* rng)
+{
+	rng_ = rng;
+}
+
 void GARunner::setSolutionTimeout(long double timeMin)
 {
 	timeMin_ = timeMin;
@@ -92,12 +97,12 @@ void GARunner::createSubPopulation()
 		bool selected2 = false;
 		for (unsigned int j = 0; j < selectors_->size(); j++)
 		{
-			if (selectorWeights_->operator[](j) < weight1)
+			if (weight1 < selectorWeights_->operator[](j))
 			{
 				selectedIndex1 = j;
 				selected1 = true;
 			}
-			if (selectorWeights_->operator[](j) < weight2)
+			if (weight2 < selectorWeights_->operator[](j))
 			{
 				selectedIndex2 = j;
 				selected2 = true;
@@ -110,24 +115,14 @@ void GARunner::createSubPopulation()
 
 		// 2. Apply a random crossover operator. Utilize operator weights.
 		selectedIndex1 = 0;
-		selectedIndex2 = 0;
 		weight1 = rng_->rand() % (crossoverTotal_ + 1);
-		weight2 = rng_->rand() % (crossoverTotal_ + 1);
-		selected1 = false;
-		selected2 = false;
 		for (unsigned int j = 0; j < crossoverOperators_->size(); j++)
 		{
-			if (crossoverWeights_->operator[](j) < weight1)
+			if (weight1 < crossoverWeights_->operator[](j))
 			{
 				selectedIndex1 = j;
-				selected1 = true;
+				break;
 			}
-			if (crossoverWeights_->operator[](j) < weight2)
-			{
-				selectedIndex2 = j;
-				selected2 = true;
-			}
-			if (selected1 && selected2) break;
 		}
 
 		std::pair<Solution*, Solution*> offspringPair = crossoverOperators_->operator[](selectedIndex1)->run(parent1, parent2, rng_);
@@ -143,12 +138,12 @@ void GARunner::createSubPopulation()
 		selected2 = false;
 		for (unsigned int j = 0; j < mutationOperators_->size(); j++)
 		{
-			if (mutationWeights_->operator[](j) < weight1)
+			if (weight1 < mutationWeights_->operator[](j))
 			{
 				selectedIndex1 = j;
 				selected1 = true;
 			}
-			if (mutationWeights_->operator[](j) < weight2)
+			if (weight2 < mutationWeights_->operator[](j))
 			{
 				selectedIndex2 = j;
 				selected2 = true;

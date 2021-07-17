@@ -1,21 +1,22 @@
 #include "pch.h"
 #include "rng.h"
+#include <time.h>
 
-RNG::RNG(unsigned int seed): rng_(new std::mt19937(seed))
+RNG::RNG(int seed): seed_(seed)
 {
+	if (seed == 0) srand((unsigned int)time(0));
 }
 
 RNG::~RNG()
 {
-	delete rng_;
+}
+
+RNG* RNG::clone(int seed)
+{
+	return new RNG(seed);
 }
 
 unsigned int RNG::rand()
 {
-	return rng_->operator()();
-}
-
-std::mt19937* RNG::engine()
-{
-	return rng_;
+	return std::rand();
 }

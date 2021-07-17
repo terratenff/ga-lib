@@ -12,6 +12,7 @@ GA::GA()
 
 GA::~GA()
 {
+	if (rng_ != nullptr) delete rng_;
 	if (problemData_ != nullptr) delete problemData_;
 	if (population_ != nullptr) delete population_;
 	if (criteria_ != nullptr) delete criteria_;
@@ -66,6 +67,11 @@ void GA::setSortOrder(bool reverse)
 void GA::setPrintState(bool enabled)
 {
 	printState_ = enabled;
+}
+
+void GA::setRandomNumberGenerator(RNG* rng)
+{
+	rng_ = rng;
 }
 
 void GA::setProblemData(ProblemData* problemData)
@@ -259,6 +265,8 @@ void GA::run()
 
 	std::chrono::steady_clock::time_point clockStart = std::chrono::steady_clock::now();
 
+	if (rng_ == nullptr) rng_ = new RNG(0);
+
 	// Population Initialization.
 	if (populationInitializers_->size() == 1)
 	{
@@ -282,7 +290,7 @@ void GA::run()
 			unsigned int weight = rand() % (cumulativeWeight + 1);
 			for (unsigned int j = 0; j < populationInitializers_->size(); j++)
 			{
-				if (weights[j] < weight)
+				if (weight < weights[j])
 				{
 					initializerSelector = j;
 					break;
@@ -465,6 +473,7 @@ void GA::createGARunners()
 	runner->setCrossoverOperators(crossoverOperators_);
 	runner->setMutationOperators(mutationOperators_);
 	runner->setEvaluator(evaluator_);
+	runner->setRandomNumberGenerator(rng_->clone(1));
 	runner->setSolutionTimeout(criteria_->getTimeMin());
 	runners_->push_back(runner);
 }
