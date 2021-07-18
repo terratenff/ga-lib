@@ -28,7 +28,6 @@ public:
 
 	/// <summary>
 	/// Creates an identical copy of the individual.
-	/// This is primarily used in crossover/mutation operators where nothing is done.
 	/// </summary>
 	/// <returns>Deep copy of the individual.</returns>
 	virtual Solution* clone() = 0;

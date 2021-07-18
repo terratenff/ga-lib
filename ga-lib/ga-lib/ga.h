@@ -304,7 +304,7 @@ private:
 	/// <summary>
 	/// Index that keeps track of the best overall individual.
 	/// </summary>
-	unsigned int bestSolutionTracker_ = 0;
+	unsigned int* bestSolutionTracker_ = new unsigned int(0);
 
 };
 

@@ -47,6 +47,8 @@ GA::~GA()
 	mutationOperators_->clear();
 	delete mutationOperators_;
 	if (evaluator_ != nullptr) delete evaluator_;
+
+	delete bestSolutionTracker_;
 }
 
 void GA::setPopulationSize(unsigned int var)
@@ -219,7 +221,7 @@ void GA::print()
 		std::cout << "-- Final Population Details --" << std::endl;
 		population_->print();
 		std::cout << "-- Discovered Optimal Solution --" << std::endl;
-		bestSolutionHistory_->operator[](bestSolutionTracker_)->print();
+		bestSolutionHistory_->operator[](*bestSolutionTracker_)->print();
 	}
 }
 
@@ -261,6 +263,10 @@ void GA::run()
 	if (postGenerationOperators_ == nullptr)
 	{
 		postGenerationOperators_ = new std::vector<PostGenerationOperator*>();
+	}
+	for (PostGenerationOperator* postGenerationOperator : *postGenerationOperators_)
+	{
+		postGenerationOperator->setupBestSolutionTracking(bestSolutionHistory_, bestSolutionTracker_);
 	}
 
 	std::chrono::steady_clock::time_point clockStart = std::chrono::steady_clock::now();
@@ -340,7 +346,7 @@ void GA::run()
 			std::string maxGen = "Generation: " + std::to_string(generation_ + 1) + " / " + std::to_string(GENERATION_MAX) + " | ";
 			std::string minGen = "Minimum Generation: " + std::to_string(generationMin_ + 1) + " / " + std::to_string(GENERATION_MIN) + " | ";
 			float generationBestFitness = bestSolutionHistory_->operator[](generation_)->getFitness();
-			float overallBestFitness = bestSolutionHistory_->operator[](bestSolutionTracker_)->getFitness();
+			float overallBestFitness = bestSolutionHistory_->operator[](*bestSolutionTracker_)->getFitness();
 			std::string fitnessGen = "Best Generation Fitness / Best Overall Fitness: " + std::to_string(generationBestFitness) + " / " + std::to_string(overallBestFitness);
 			std::cout << maxGen << minGen << fitnessGen << std::endl;
 		};
@@ -374,7 +380,7 @@ void GA::run()
 			if (generation_ % (postGenerationOperator->getGenerationFrequency()) == 0)
 			{
 				postGenerationOperatorsUsed = true;
-				postGenerationOperator->run(newPopulation, population_);
+				postGenerationOperator->run(rng_, newPopulation, population_);
 			}
 		}
 		
@@ -388,9 +394,9 @@ void GA::run()
 		}
 		
 		bestSolutionHistory_->push_back(population_->getSolution(0));
-		if (solutionComparator(bestSolutionHistory_->operator[](bestSolutionHistory_->size() - 1), bestSolutionHistory_->operator[](bestSolutionTracker_)))
+		if (solutionComparator(bestSolutionHistory_->operator[](bestSolutionHistory_->size() - 1), bestSolutionHistory_->operator[](*bestSolutionTracker_)))
 		{
-			bestSolutionTracker_ = bestSolutionHistory_->size() - 1;
+			*bestSolutionTracker_ = bestSolutionHistory_->size() - 1;
 			generationMin_ = 0;
 		}
 		
@@ -410,7 +416,7 @@ void GA::run()
 		runner->terminate();
 	}
 	
-	if (criteria_->checkFitness(bestSolutionHistory_->operator[](bestSolutionTracker_)->getFitness()))
+	if (criteria_->checkFitness(bestSolutionHistory_->operator[](*bestSolutionTracker_)->getFitness()))
 	{
 		terminationCode_ = 1;
 	}
@@ -438,11 +444,11 @@ Solution* GA::getBestSolution()
 	{
 		throw std::exception("No solutions have been recorded yet.");
 	}
-	else if (bestSolutionHistory_->size() <= bestSolutionTracker_)
+	else if (bestSolutionHistory_->size() <= *bestSolutionTracker_)
 	{
 		throw std::out_of_range("Solution tracker is not properly maintained.");
 	}
-	return bestSolutionHistory_->operator[](bestSolutionTracker_);
+	return bestSolutionHistory_->operator[](*bestSolutionTracker_);
 }
 
 unsigned int GA::getTotalGeneration()

@@ -8,7 +8,28 @@ PostGenerationOperator::PostGenerationOperator(ProblemData* data, Evaluator* eva
 {
 }
 
+void PostGenerationOperator::setupBestSolutionTracking(std::vector<Solution*>* bestSolutionHistory, unsigned int* bestSolutionTracker)
+{
+	bestSolutionHistory_ = bestSolutionHistory;
+	bestSolutionTracker_ = bestSolutionTracker;
+}
+
 unsigned int PostGenerationOperator::getGenerationFrequency()
 {
 	return generationFrequency_;
+}
+
+Solution* PostGenerationOperator::getFromSolutionHistory(unsigned int i)
+{
+	return bestSolutionHistory_->operator[](i);
+}
+
+Solution* PostGenerationOperator::getBestSolution()
+{
+	return bestSolutionHistory_->operator[](*bestSolutionTracker_);
+}
+
+unsigned int PostGenerationOperator::getHistorySize()
+{
+	return bestSolutionHistory_->size();
 }

@@ -63,7 +63,11 @@ public:
 	/// Combines two populations into one. It should be noted that population sizes are not considered here.
 	/// </summary>
 	/// <param name="subPopulation">Population that is to merged into this population and then deallocated.</param>
-	void mergePopulation(Population* subPopulation);
+	/// <param name="copy">
+	/// If set to true, subpopulation individuals are copied into the subject population. Subpopulation individuals remain intact.
+	/// If set to false, subpopulation individuals are relocated into the subject population. Subpopulation now has null pointers.
+	/// </param>
+	void mergePopulation(Population* subPopulation, bool copy = false);
 
 	/// <summary>
 	/// Getter for the size of the population.

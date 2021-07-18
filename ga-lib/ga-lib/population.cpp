@@ -57,12 +57,22 @@ void Population::replaceSolution(unsigned int i, Solution* solution, bool delete
 	population_->operator[](i) = solution;
 }
 
-void Population::mergePopulation(Population* subPopulation)
+void Population::mergePopulation(Population* subPopulation, bool copy)
 {
-	for (unsigned int i = 0; i < subPopulation->size(); i++)
+	if (copy)
 	{
-		this->addSolution(subPopulation->getSolution(i));
-		subPopulation->replaceSolution(i, nullptr, false);
+		for (unsigned int i = 0; i < subPopulation->size(); i++)
+		{
+			this->addSolution(subPopulation->getSolution(i)->clone());
+		}
+	}
+	else
+	{
+		for (unsigned int i = 0; i < subPopulation->size(); i++)
+		{
+			this->addSolution(subPopulation->getSolution(i));
+			subPopulation->replaceSolution(i, nullptr, false);
+		}
 	}
 }
 
