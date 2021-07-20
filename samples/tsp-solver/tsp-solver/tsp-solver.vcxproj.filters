@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="tsp-solver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tspsolution.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tspdata.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tspevaluator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tspresult.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="crossover_operators\tspcrossoveronepoint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="crossover_operators\tspcrossoverorder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="post_generation_operators\tsppgoduplicatereplacer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="selectors\tspselectorroulettewheel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="selectors\tspselectortournament.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="population_initializers\tspinitializerrandom.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mutation_operators\tspmutationsequencerelocation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mutation_operators\tspmutationsequenceshuffle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mutation_operators\tspmutationsequenceinversion.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mutation_operators\tspmutationswap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mutation_operators\tspmutationnearestneighbor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="random_number_generators\rngmt.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="random_number_generators\rngknuth.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="post_generation_operators\tsppgoelitism.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="post_generation_operators\tsppgofiltration.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="post_generation_operators\tsppgoretention.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="tspsolution.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tspdata.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tspevaluator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tspresult.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="crossover_operators\tspcrossoveronepoint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="crossover_operators\tspcrossoverorder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="selectors\tspselectortournament.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="selectors\tspselectorroulettewheel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="post_generation_operators\tsppgoduplicatereplacer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="population_initializers\tspinitializerrandom.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mutation_operators\tspmutationsequencerelocation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mutation_operators\tspmutationsequenceinversion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mutation_operators\tspmutationsequenceshuffle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mutation_operators\tspmutationswap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mutation_operators\tspmutationnearestneighbor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="random_number_generators\rngmt.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="random_number_generators\rngknuth.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="post_generation_operators\tsppgofiltration.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="post_generation_operators\tsppgoelitism.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="post_generation_operators\tsppgoretention.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
