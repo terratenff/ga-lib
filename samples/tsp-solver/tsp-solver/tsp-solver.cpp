@@ -9,6 +9,7 @@
 #include "tspevaluator.h"
 #include "tspdata.h"
 #include "tspresult.h"
+#include "multithreading/gamultithreaded.h"
 #include "random_number_generators/rngmt.h"
 #include "random_number_generators/rngknuth.h"
 #include "population_initializers/tspinitializerrandom.h"
@@ -33,7 +34,7 @@ int main()
     //RNGKNUTH* rng = new RNGKNUTH(1);
     TSPData* data = new TSPData("sample_matrix.txt");
     TSPEvaluator* evaluator = new TSPEvaluator(data);
-    TerminationCriteria* criteria = new TerminationCriteria(10000, 10000, 1, 30, -999999, 999999);
+    TerminationCriteria* criteria = new TerminationCriteria(2000, 10000, 1, 30, -999999, 999999);
     TSPInitializerRandom* initializer1 = new TSPInitializerRandom(data, evaluator, 1);
     TSPSelectorTournament* selector1 = new TSPSelectorTournament(10, 1, 0.90);
     TSPSelectorRouletteWheel* selector2 = new TSPSelectorRouletteWheel(10, 1);
@@ -47,16 +48,17 @@ int main()
     TSPMutationSequenceRelocation* mutationOperator5 = new TSPMutationSequenceRelocation(data, evaluator, 2, 10, 2);
     TSPMutationSequenceShuffle* mutationOperator6 = new TSPMutationSequenceShuffle(data, evaluator, 2, 25, 5);
     TSPPGODuplicateReplacer* pgOperator1 = new TSPPGODuplicateReplacer(data, evaluator, 10, initializer1);
-    TSPPGORetention* pgOperator2 = new TSPPGORetention(data, evaluator, 1, 0.10f);
+    TSPPGORetention* pgOperator2 = new TSPPGORetention(data, evaluator, 10, 0.10f);
     TSPPGOFiltration* pgOperator3 = new TSPPGOFiltration(data, evaluator, 50, initializer1);
-    TSPPGOElitism* pgOperator4 = new TSPPGOElitism(data, evaluator, 100, 0.10f);
+    TSPPGOElitism* pgOperator4 = new TSPPGOElitism(data, evaluator, 10, 0.05f);
 
     // Create and configure the GA instance.
     GA ga;
-    ga.setPopulationSize(50);
-    ga.setThreadCount(1);
+    //GAMultithreaded ga;
+    //ga.setThreadCount(4);
+    ga.setPopulationSize(100);
     ga.setSortOrder(false);
-    ga.setPrintState(true);
+    //ga.setPrintFrequency(0);
     //ga.setRandomNumberGenerator(rng);
     ga.setProblemData(data);
     ga.setEvaluator(evaluator);

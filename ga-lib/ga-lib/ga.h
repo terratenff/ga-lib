@@ -74,12 +74,12 @@ public:
 	void setSortOrder(bool reverse);
 
 	/// <summary>
-	/// Setter for the flag that determines whether the GA instance should keep the user updated on the progress of the execution
-	/// (via prints). Also applies to population initialization.
-	/// Print state is true by default.
+	/// Setter for how frequently the GA instance diplays its progress.
 	/// </summary>
-	/// <param name="enabled">true = For each generation, information is given about generation and fitness. false = Nothing is printed.</param>
-	void setPrintState(bool enabled);
+	/// <param name="generationFrequency">
+	/// Number of generations that must pass before an update is given. If set to 0 or lower, the update is never given.
+	/// </param>
+	void setPrintFrequency(unsigned int generationFrequency);
 
 	/// <summary>
 	/// Setter for the pseudo random number generator. The base class RNG can be used, but it is not recommended in multithreaded implementations.
@@ -180,22 +180,8 @@ public:
 	/// </summary>
 	/// <returns>Best solution history.</returns>
 	std::vector<Solution*>* getBestSolutionHistory();
-private:
 
-	/// <summary>
-	/// Creates the runners that GA uses to create new populations.
-	/// This function, along with "createNewPopulation", has to be overridden
-	/// if multithreading is to be implemented.
-	/// </summary>
-	virtual void createGARunners();
-
-	/// <summary>
-	/// Creates a new population for the next generation to use.
-	/// This function, along with "createGARunners", has to be overridden
-	/// if multithreading is to be implemented.
-	/// </summary>
-	/// <returns>New population.</returns>
-	virtual Population* createNewPopulation();
+protected:
 
 	/// <summary>
 	/// Number of individuals that populations are allowed to have.
@@ -208,18 +194,6 @@ private:
 	/// This only matters in multithreaded implementations.
 	/// </summary>
 	unsigned int threadCount_ = 1;
-
-	/// <summary>
-	/// Determines the direction of population sorting and individual comparisons.
-	/// If true, order is from highest to lowest. If false, lowest to highest.
-	/// </summary>
-	bool sortOrder_ = false;
-
-	/// <summary>
-	/// Flag that determines whether GA instance should print information about
-	/// its execution every generation (and initialization).
-	/// </summary>
-	bool printState_ = true;
 
 	/// <summary>
 	/// Pseudo random number generator. Runner instances are given copies of these with different seeds.
@@ -276,6 +250,42 @@ private:
 	/// </summary>
 	Evaluator* evaluator_ = nullptr;
 
+private:
+	/// <summary>
+	/// Creates the runners that GA uses to create new populations.
+	/// This function, along with "createNewPopulation" and "terminateGARunners", has to be overridden
+	/// if multithreading is to be implemented.
+	/// </summary>
+	virtual void createGARunners();
+
+	/// <summary>
+	/// Creates a new population for the next generation to use.
+	/// This function, along with "createGARunners" and "terminateGARunners", has to be overridden
+	/// if multithreading is to be implemented.
+	/// </summary>
+	/// <returns>New population.</returns>
+	virtual Population* createNewPopulation();
+
+	/// <summary>
+	/// Terminates the runners that GA has used to create new populations.
+	/// This function, along with "createGARunners" and "createNewPopulation", has to be overridden
+	/// if multithreading is to be implemented.
+	/// </summary>
+	virtual void terminateGARunners();
+
+	/// <summary>
+	/// Determines the direction of population sorting and individual comparisons.
+	/// If true, order is from highest to lowest. If false, lowest to highest.
+	/// </summary>
+	bool sortOrder_ = false;
+
+	/// <summary>
+	/// Determines how frequently GA instance should print information about its
+	/// execution. The value represents how many generations should pass before
+	/// giving an update. If set to 0 or lower, this feature is disabled.
+	/// </summary>
+	unsigned int printFrequency_ = 1;
+
 	/// <summary>
 	/// Current generation.
 	/// </summary>
@@ -305,6 +315,5 @@ private:
 	/// Index that keeps track of the best overall individual.
 	/// </summary>
 	unsigned int* bestSolutionTracker_ = new unsigned int(0);
-
 };
 

@@ -153,6 +153,8 @@
   <ItemGroup>
     <ClCompile Include="crossover_operators\tspcrossoveronepoint.cpp" />
     <ClCompile Include="crossover_operators\tspcrossoverorder.cpp" />
+    <ClCompile Include="multithreading\gamultithreaded.cpp" />
+    <ClCompile Include="multithreading\garunnermultithreaded.cpp" />
     <ClCompile Include="mutation_operators\tspmutationswap.cpp" />
     <ClCompile Include="mutation_operators\tspmutationnearestneighbor.cpp" />
     <ClCompile Include="mutation_operators\tspmutationsequenceinversion.cpp" />
@@ -176,6 +178,8 @@
   <ItemGroup>
     <ClInclude Include="crossover_operators\tspcrossoveronepoint.h" />
     <ClInclude Include="crossover_operators\tspcrossoverorder.h" />
+    <ClInclude Include="multithreading\gamultithreaded.h" />
+    <ClInclude Include="multithreading\garunnermultithreaded.h" />
     <ClInclude Include="mutation_operators\tspmutationswap.h" />
     <ClInclude Include="mutation_operators\tspmutationnearestneighbor.h" />
     <ClInclude Include="mutation_operators\tspmutationsequenceinversion.h" />

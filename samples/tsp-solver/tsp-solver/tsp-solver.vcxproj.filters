@@ -78,6 +78,12 @@
     <ClCompile Include="post_generation_operators\tsppgoretention.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="multithreading\gamultithreaded.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="multithreading\garunnermultithreaded.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tspsolution.h">
@@ -138,6 +144,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="post_generation_operators\tsppgoretention.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="multithreading\gamultithreaded.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="multithreading\garunnermultithreaded.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

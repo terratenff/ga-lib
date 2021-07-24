@@ -4,7 +4,7 @@
 
 RNG::RNG(int seed): seed_(seed)
 {
-	if (seed == 0) srand((unsigned int)time(0));
+	srand((unsigned int)time(0) + seed);
 }
 
 RNG::~RNG()
