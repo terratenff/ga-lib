@@ -8,6 +8,8 @@ GARunnerMultithreaded::GARunnerMultithreaded(int id, unsigned int subPopulationS
 
 GARunnerMultithreaded::~GARunnerMultithreaded()
 {
+	if (promise_ != nullptr) delete promise_;
+	if (future_ != nullptr) delete future_;
 }
 
 void GARunnerMultithreaded::run()
@@ -24,58 +26,57 @@ void GARunnerMultithreaded::terminate()
 	terminationRequested_ = true;
 }
 
-std::shared_future<bool> GARunnerMultithreaded::getFuture()
-{
-	return promise_.get_future();
-}
-
-void GARunnerMultithreaded::setTaskFuture(std::shared_future<bool> taskFuture)
-{
-	taskFuture_ = taskFuture;
-}
-
-void GARunnerMultithreaded::setTaskConclusionFuture(std::shared_future<bool> taskConclusionFuture)
-{
-	taskConclusionFutureOld_ = taskConclusionFuture_;
-	taskConclusionFuture_ = taskConclusionFuture;
-}
-
 void GARunnerMultithreaded::join()
 {
 	thread_.join();
+}
+
+void GARunnerMultithreaded::setConditionVariable(std::condition_variable* conditionVariable)
+{
+	conditionVariable_ = conditionVariable;
+}
+
+void GARunnerMultithreaded::setMutex(std::mutex* mutex)
+{
+	mutex_ = mutex;
+}
+
+void GARunnerMultithreaded::setPromise(std::promise<bool>* promise)
+{
+	if (promise_ != nullptr) delete promise_;
+	promise_ = promise;
+	if (future_ != nullptr) delete future_;
+	future_ = new std::future<bool>(promise_->get_future());
+}
+
+std::future<bool>* GARunnerMultithreaded::getFuture()
+{
+	return future_;
+}
+
+void GARunnerMultithreaded::setReadyState(bool* ready)
+{
+	ready_ = ready;
 }
 
 void GARunnerMultithreaded::threadFunction()
 {
 	while (!terminationRequested_)
 	{
-		std::future_status status = taskFuture_.wait_for(std::chrono::milliseconds(10000));
+		{
+			std::unique_lock<std::mutex> lock(*mutex_);
+			while (!*ready_) conditionVariable_->wait(lock);
+			*ready_ = false;
+			lock.unlock();
+		}
 		if (terminationRequested_)
 		{
-			//std::cout << "Terminating runner..." << std::endl;
 			break;
-		}
-		else if (status == std::future_status::timeout)
-		{
-			std::cout << "A runner has been terminated due to not receiving a task." << std::endl;
-			break;
-		}
-		else if (status == std::future_status::ready)
-		{
-			createSubPopulation();
-			promise_.set_value(true);
-			promise_ = std::promise<bool>();
-			std::future_status status2 = taskConclusionFuture_.wait_for(std::chrono::milliseconds(2000));
-			if (status2 == std::future_status::timeout)
-			{
-				std::cout << "A runner has been terminated since it has been left hanging." << std::endl;
-				break;
-			}
 		}
 		else
 		{
-			std::cout << "A runner has been terminated due to an unknown reason." << std::endl;
-			break;
+			createSubPopulation();
+			promise_->set_value(true);
 		}
 	}
 }

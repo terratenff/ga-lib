@@ -4,10 +4,12 @@
 #include <thread>
 #include <chrono>
 #include <future>
+#include <mutex>
+#include <condition_variable>
 
 /// <summary>
-/// Known issue: std::future_error (future_already_retrieved) is thrown at random. Increasing the frequency
-/// at which updates are given (using "setPrintFrequency") might lower the probability of this happening.
+/// Known issue: Future element provided by a runner is left hanging at random.
+/// A makeshift patch is applied to circumvent damages that it causes for the time being.
 /// </summary>
 class GARunnerMultithreaded : public GARunner
 {
@@ -16,11 +18,13 @@ public:
 	~GARunnerMultithreaded();
 	void run() override;
 	void terminate() override;
-
-	std::shared_future<bool> getFuture();
-	void setTaskFuture(std::shared_future<bool> taskFuture);
-	void setTaskConclusionFuture(std::shared_future<bool> taskConclusionFuture);
 	void join();
+
+	void setConditionVariable(std::condition_variable* conditionVariable);
+	void setMutex(std::mutex* mutex);
+	void setPromise(std::promise<bool>* promise);
+	std::future<bool>* getFuture();
+	void setReadyState(bool* ready);
 private:
 	void threadFunction() override;
 	bool started_ = false;
@@ -28,23 +32,32 @@ private:
 	std::thread thread_;
 
 	/// <summary>
+	/// Used to organize runners: parameters of the runners have to be configured
+	/// every generation prior to subpopulation creation. This makes sure that they
+	/// do not proceed prematurely.
+	/// </summary>
+	std::condition_variable* conditionVariable_ = nullptr;
+
+	/// <summary>
+	/// Used to control synchronization with the condition variable.
+	/// </summary>
+	std::mutex* mutex_ = nullptr;
+
+	/// <summary>
 	/// Used to let the GA instance know that a subpopulation has been completed.
+	/// Runners use it to send the signal.
 	/// </summary>
-	std::promise<bool> promise_;
+	std::promise<bool>* promise_ = nullptr;
 
 	/// <summary>
-	/// Using this runners wait for the GA instance to give the signal for
-	/// creating subpopulations.
+	/// Used to let the GA instance know that a subpopulation has been completed.
+	/// Runners pass it over for the GA instance.
 	/// </summary>
-	std::shared_future<bool> taskFuture_;
+	std::future<bool>* future_ = nullptr;
 
 	/// <summary>
-	/// Using this runners wait for the GA instance to reset its base promise.
+	/// Used to catch those runners that do not reach the condition variable before
+	/// the main thread.
 	/// </summary>
-	std::shared_future<bool> taskConclusionFuture_;
-
-	/// <summary>
-	/// Used as a makeshift solution to an issue where runners are left hanging at random.
-	/// </summary>
-	std::shared_future<bool> taskConclusionFutureOld_;
+	bool* ready_ = nullptr;
 };
